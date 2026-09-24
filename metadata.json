@@ -1,0 +1,6 @@
+{
+  "name": "SG Capital Intelligence",
+  "description": "Institutional Singapore real estate capital terminal synthesizing official public sector spatial records, historical transactional caveats, and quantitative sensitivity models.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
