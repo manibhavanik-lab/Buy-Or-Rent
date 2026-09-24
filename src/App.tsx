@@ -5,6 +5,7 @@ import { HdbResaleRecordsView } from './components/HdbResaleRecordsView';
 import { UraPrivateCaveatsView } from './components/UraPrivateCaveatsView';
 import { SchoolAmenityRadiiView } from './components/SchoolAmenityRadiiView';
 import { AiInvestmentReportView } from './components/AiInvestmentReportView';
+import { ApiHealthView } from './components/ApiHealthView';
 import { HyperparametersConfig } from './components/HyperparametersModal';
 
 export type NavigationTab =
@@ -12,7 +13,8 @@ export type NavigationTab =
   | 'hdb-resale-records'
   | 'ura-private-caveats'
   | 'school-amenity-radii'
-  | 'ai-investment-report';
+  | 'ai-investment-report'
+  | 'api-health';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<NavigationTab>('precinct-intelligence');
@@ -43,6 +45,17 @@ export default function App() {
     updateTime();
     const interval = setInterval(updateTime, 1000);
     return () => clearInterval(interval);
+  }, []);
+
+  // Detect direct URL route or hash to /health
+  useEffect(() => {
+    if (
+      window.location.pathname.startsWith('/health') ||
+      window.location.pathname.startsWith('/api/health') ||
+      window.location.hash === '#health'
+    ) {
+      setActiveTab('api-health');
+    }
   }, []);
 
   // Update profile when postal changes
@@ -208,6 +221,18 @@ export default function App() {
               <span className="material-symbols-outlined text-[16px]">psychology</span>
               <span>AI Investment Report</span>
             </button>
+
+            <button
+              onClick={() => setActiveTab('api-health')}
+              className={`h-full px-3.5 flex items-center gap-1.5 font-badge-code text-xs uppercase tracking-wider transition-colors cursor-pointer border-b-2 ${
+                activeTab === 'api-health'
+                  ? 'border-secondary text-secondary font-bold bg-surface-container/50'
+                  : 'border-transparent text-on-surface-variant hover:text-on-surface hover:bg-surface-container/30'
+              }`}
+            >
+              <span className="material-symbols-outlined text-[16px]">monitor_heart</span>
+              <span>API Health</span>
+            </button>
           </nav>
 
           {/* Right Header Status Widget */}
@@ -274,6 +299,14 @@ export default function App() {
           >
             AI Report
           </button>
+          <button
+            onClick={() => setActiveTab('api-health')}
+            className={`py-2 px-3 text-xs font-badge-code uppercase tracking-wider whitespace-nowrap border-b-2 ${
+              activeTab === 'api-health' ? 'border-secondary text-secondary font-bold' : 'border-transparent text-on-surface-variant'
+            }`}
+          >
+            API Health
+          </button>
         </div>
       </header>
 
@@ -310,6 +343,10 @@ export default function App() {
             isRegenerating={isRegenerating}
           />
         )}
+
+        {activeTab === 'api-health' && (
+          <ApiHealthView />
+        )}
       </main>
 
       {/* Terminal Global Sub-Footer */}
@@ -320,6 +357,14 @@ export default function App() {
           <span>Official Public Sector Spatial Records & Quantitative Valuation Terminal</span>
         </div>
         <div className="flex items-center gap-4 font-badge-code text-[11px]">
+          <button
+            onClick={() => setActiveTab('api-health')}
+            className="hover:text-primary transition-colors flex items-center gap-1 cursor-pointer"
+          >
+            <span className="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+            <span>GET /api/health (Live Audit)</span>
+          </button>
+          <span>•</span>
           <span>SLA OneMap API v2.0</span>
           <span>•</span>
           <span>data.gov.sg v1.0</span>
