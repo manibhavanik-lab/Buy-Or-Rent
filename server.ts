@@ -4,7 +4,12 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
 import { GoogleGenAI } from '@google/genai';
-import { healthCheckHandler } from './api/health/index.ts';
+import healthHandler from './api/health.js';
+import hdbHandler from './api/hdb.js';
+import uraHandler from './api/ura.js';
+import onemapHandler from './api/onemap.js';
+import insightsHandler from './api/insights.js';
+import geminiHandler from './api/gemini.js';
 
 dotenv.config();
 
@@ -16,8 +21,13 @@ const port = 3000;
 
 app.use(express.json());
 
-// Endpoint: Health Check (200 when healthy, 503 when not)
-app.get('/api/health', healthCheckHandler);
+// Mount all modular API endpoints from /api
+app.all('/api/health', (req, res) => healthHandler(req, res));
+app.all('/api/hdb', (req, res) => hdbHandler(req, res));
+app.all('/api/ura', (req, res) => uraHandler(req, res));
+app.all('/api/onemap', (req, res) => onemapHandler(req, res));
+app.all('/api/insights', (req, res) => insightsHandler(req, res));
+app.all('/api/gemini', (req, res) => geminiHandler(req, res));
 
 // Initialize GoogleGenAI client with required User-Agent
 const geminiApiKey = process.env.GEMINI_API_KEY;
